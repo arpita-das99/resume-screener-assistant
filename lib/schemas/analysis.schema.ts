@@ -56,3 +56,39 @@ export type AnalysisResult = z.infer<
 export type CreateAnalysisInput = z.infer<
   typeof createAnalysisSchema
 >;
+
+
+// Query params for GET /api/analyses. Empty strings (from blank form
+// fields) are treated as "not provided".
+const optionalNumber = (schema: z.ZodNumber) =>
+  z.preprocess(
+    (v) => (v === "" || v === null ? undefined : v),
+    z.coerce.number().pipe(schema).optional(),
+  );
+
+export const listQuerySchema = z
+  .object({
+    name: z.preprocess(
+      (v) => (v === "" || v === null ? undefined : v),
+      z.string().trim().max(100).optional(),
+    ),
+    minScore: optionalNumber(z.number().min(0).max(100)),
+    maxScore: optionalNumber(z.number().min(0).max(100)),
+    page: z.preprocess(
+      (v) => (v === "" || v === null ? undefined : v),
+      z.coerce.number().int().min(1).default(1),
+    ),
+    limit: z.preprocess(
+      (v) => (v === "" || v === null ? undefined : v),
+      z.coerce.number().int().min(1).max(50).default(10),
+    ),
+  })
+  .refine(
+    (q) =>
+      q.minScore === undefined ||
+      q.maxScore === undefined ||
+      q.minScore <= q.maxScore,
+    { message: "minScore must not be greater than maxScore", path: ["minScore"] },
+  );
+
+export type ListQuery = z.infer<typeof listQuerySchema>;
