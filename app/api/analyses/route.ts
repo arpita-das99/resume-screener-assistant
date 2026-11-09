@@ -6,8 +6,6 @@ import { analyzeResume } from "@/lib/ai/gorq";
 import { analysisRequestSchema } from "@/lib/schemas/analysis.schema";
 import AnalysisModel from "@/models/analysis.model";
 
-export const runtime = "nodejs";
-
 export async function POST(request: NextRequest) {
   // 1. Parse request body
   let body: unknown;
