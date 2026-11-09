@@ -28,6 +28,9 @@ export default function HistoryList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -66,7 +69,26 @@ export default function HistoryList() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [name, minScore, maxScore, page]);
+  }, [name, minScore, maxScore, page, reloadKey]);
+
+  async function onDelete(id: string) {
+    setDeleteError(null);
+    try {
+      const res = await fetch(`/api/analyses/${id}`, { method: "DELETE" });
+      if (!res.ok && res.status !== 404) {
+        const body = await res.json().catch(() => null);
+        setDeleteError(friendlyError(res.status, body as ApiErrorBody | null));
+        return;
+      }
+      setConfirmId(null);
+      setOpenId(null);
+      // If this was the last item on the page, step back a page.
+      if (items.length === 1 && page > 1) setPage((p) => p - 1);
+      else setReloadKey((k) => k + 1);
+    } catch {
+      setDeleteError(friendlyError(0, null));
+    }
+  }
 
   function resetPageAnd(setter: (v: string) => void) {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +120,12 @@ export default function HistoryList() {
         </p>
       )}
 
+      {deleteError && (
+        <p role="alert" className="rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
+          {deleteError}
+        </p>
+      )}
+
       {loading && <p className="text-sm text-neutral-500">Loading…</p>}
 
       {!loading && !error && items.length === 0 && (
@@ -122,6 +150,23 @@ export default function HistoryList() {
             {openId === a.id && (
               <div className="border-t border-neutral-200 p-3 dark:border-neutral-800">
                 <AnalysisReport analysis={a} />
+                <div className="mt-3 flex items-center gap-3 text-sm">
+                  {confirmId === a.id ? (
+                    <>
+                      <span>Delete this analysis permanently?</span>
+                      <button type="button" onClick={() => onDelete(a.id)} className="rounded-md bg-red-600 px-3 py-1 text-white">
+                        Yes, delete
+                      </button>
+                      <button type="button" onClick={() => setConfirmId(null)} className="rounded-md border border-neutral-300 px-3 py-1 dark:border-neutral-700">
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button type="button" onClick={() => setConfirmId(a.id)} className="text-red-600 hover:underline">
+                      Delete analysis
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </li>
