@@ -1,6 +1,32 @@
 
 import { z } from "zod";
 
+
+export const analysisRequestSchema = z.object({
+  candidateName: z
+    .string()
+    .trim()
+    .min(2, "Candidate name must be at least 2 characters")
+    .max(100),
+
+  jobDescription: z
+    .string()
+    .trim()
+    .min(50, "Job description must be at least 50 characters")
+    .max(20000),
+
+  resumeText: z
+    .string()
+    .trim()
+    .min(50, "Resume must be at least 50 characters")
+    .max(30000),
+}).strict();
+
+export type AnalysisRequest = z.infer<
+  typeof analysisRequestSchema
+>;
+
+
 export const analysisResultSchema = z.object({
   matchScore: z.number().int().min(0).max(100),
 
