@@ -3,10 +3,11 @@
 import { useState } from "react";
 import type { AnalysisDTO } from "@/lib/dto";
 import { friendlyError, type ApiErrorBody } from "@/lib/api-errors";
+import { MAX_JD_CHARS, MAX_RESUME_CHARS } from "@/lib/ai/limits";
 import AnalysisReport from "./AnalysisReport";
 
-const JD_MAX = 20000;
-const RESUME_MAX = 30000;
+const JD_MAX = MAX_JD_CHARS;
+const RESUME_MAX = MAX_RESUME_CHARS;
 
 const inputClass =
   "w-full rounded-md border border-neutral-300 bg-transparent p-2 text-sm dark:border-neutral-700";
@@ -96,7 +97,7 @@ export default function AnalyzeForm() {
             required
           />
           <p className={`text-xs ${jobDescription.length > JD_MAX ? "text-red-600" : "text-neutral-500"}`}>
-            {jobDescription.length.toLocaleString()} / {JD_MAX.toLocaleString()} characters (min 50)
+            {jobDescription.length.toLocaleString()} / {JD_MAX.toLocaleString()} characters (min 50). Longer text is shortened.
           </p>
         </div>
 
@@ -116,7 +117,7 @@ export default function AnalyzeForm() {
             required
           />
           <p className={`text-xs ${resumeText.length > RESUME_MAX ? "text-red-600" : "text-neutral-500"}`}>
-            {resumeText.length.toLocaleString()} / {RESUME_MAX.toLocaleString()} characters (min 50).
+            {resumeText.length.toLocaleString()} / {RESUME_MAX.toLocaleString()} characters (min 50). Longer text is shortened.
             Paste text or upload a .txt file; PDFs are not supported.
           </p>
         </div>

@@ -58,10 +58,10 @@ export async function POST(request: NextRequest) {
   }
 
   // 4. Generate AI analysis
-  let result;
+  let outcome;
 
   try {
-    result = await analyzeResume(jobDescription, resumeText);
+    outcome = await analyzeResume(jobDescription, resumeText);
   } catch (error) {
     console.error(
       "AI analysis failed:",
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
   try {
     const analysis = await AnalysisModel.create({
       candidateName,
-      ...result,
+      ...outcome.result,
     });
 
     // 6. Return result
@@ -86,6 +86,7 @@ export async function POST(request: NextRequest) {
       {
         message: "Analysis completed successfully",
         data: toDTO(analysis),
+        truncated: outcome.truncated,
       },
       { status: 201 }
     );

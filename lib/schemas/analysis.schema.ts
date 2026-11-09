@@ -1,6 +1,8 @@
 
 import { z } from "zod";
 
+import { HARD_MAX_CHARS } from "@/lib/ai/limits";
+
 
 export const analysisRequestSchema = z.object({
   candidateName: z
@@ -13,13 +15,13 @@ export const analysisRequestSchema = z.object({
     .string()
     .trim()
     .min(50, "Job description must be at least 50 characters")
-    .max(20000),
+    .max(HARD_MAX_CHARS, "Job description is too large"),
 
   resumeText: z
     .string()
     .trim()
     .min(50, "Resume must be at least 50 characters")
-    .max(30000),
+    .max(HARD_MAX_CHARS, "Resume is too large"),
 }).strict();
 
 export type AnalysisRequest = z.infer<
