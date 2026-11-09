@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
-import { analyzeResume } from "@/lib/ai/gorq";
+import { analyzeResume } from "@/lib/ai/groq";
 import { analysisRequestSchema } from "@/lib/schemas/analysis.schema";
 import AnalysisModel from "@/models/analysis.model";
 
