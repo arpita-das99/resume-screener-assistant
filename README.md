@@ -122,6 +122,8 @@ What I would add for production (not implemented):
 
 Live app: https://resume-screener-assistant-zeta.vercel.app/
 
+Screen recording: https://drive.google.com/file/d/1GR_F1Cnw_fyY7ipG8DC__qXAl2tGSyxf/view?usp=drive_link
+
 **Input screen**
 
 ![Input screen with job description and resume fields](screenshots/input-form.png)
