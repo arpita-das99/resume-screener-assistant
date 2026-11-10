@@ -120,7 +120,7 @@ What I would add for production (not implemented):
 
 - MongoDB is used instead of SQLite (the brief says SQLite "is fine", not required).
 - The candidate name is typed in by HR rather than extracted from the resume.
-- File upload supports `.txt` only. PDF/DOCX parsing is not implemented; PDF text must be pasted.
+- File upload supports `.txt` and text-based `.pdf` (max 4 MB, parsed server-side with `unpdf`). Scanned/image PDFs are rejected (no OCR) and DOCX is not supported.
 - No authentication (see Privacy).
 - No automated tests yet; behaviour was verified manually against the running app (valid, empty, wrongly typed and oversized input, injection resume, filters, delete).
 - Not deployed.
