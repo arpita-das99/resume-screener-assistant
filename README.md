@@ -123,8 +123,10 @@ What I would add for production (not implemented):
 - File upload supports `.txt` and text-based `.pdf` (max 4 MB, parsed server-side with `unpdf`). Scanned/image PDFs are rejected (no OCR) and DOCX is not supported.
 - No authentication (see Privacy).
 - No automated tests yet; behaviour was verified manually against the running app (valid, empty, wrongly typed and oversized input, injection resume, filters, delete).
-- Not deployed.
+- Deployed on Vercel (MongoDB Atlas + Groq): https://resume-screener-assistant-zeta.vercel.app/
 
 ## Demo
+
+Live app: https://resume-screener-assistant-zeta.vercel.app/
 
 _Add the screen recording link or screenshots here._
