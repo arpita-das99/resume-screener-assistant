@@ -1,6 +1,6 @@
 # Resume Screener Assistant
 
-Internal tool for HR. Paste (or upload as `.txt`) a job description and a candidate resume and get a structured match report: a 0-100 score, the top 5 matching skills, the top 3 gaps and 3 suggested interview questions. Every analysis is saved, and a History page lets HR search by candidate name and filter by score range.
+Internal tool for HR. Paste (or upload as `.txt`, `.pdf`) a job description and a candidate resume and get a structured match report: a 0-100 score, the top 5 matching skills, the top 3 gaps and 3 suggested interview questions. Every analysis is saved, and a History page lets HR search by candidate name and filter by score range.
 
 Built for the Synthweb AI Product Engineer assessment.
 
