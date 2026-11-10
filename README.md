@@ -129,4 +129,16 @@ What I would add for production (not implemented):
 
 Live app: https://resume-screener-assistant-zeta.vercel.app/
 
-_Add the screen recording link or screenshots here._
+**Input screen**
+
+![Input screen with job description and resume fields](screenshots/input-form.png)
+
+**Match report** (score, top 5 skills, top 3 gaps, 3 interview questions)
+
+![Analysis report](screenshots/analysis-report.png)
+
+**History** (search by candidate name, filter by score range)
+
+![History page filtered by candidate name](screenshots/history-search.png)
+
+
