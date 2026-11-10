@@ -129,6 +129,9 @@ Evaluation rules:
 - Evaluate only against the supplied job description.
 - Score the candidate from 0 to 100.
 - Return exactly 5 matching skills.
+- A matching skill must be a skill the job description actually asks for (or clearly implies) AND the resume shows evidence of. Never list a skill just because it is prominent on the resume.
+- Order matching skills from strongest to weakest match.
+- If fewer than 5 skills genuinely match, still return exactly 5 entries, but start every weak or non-matching entry with "Weak or no match: " followed by the closest relevant skill or a short note (for example "Weak or no match: communication, only indirect evidence"). Never present an unrelated resume skill as a real match.
 - Return exactly 3 skill gaps.
 - Return exactly 3 interview questions.
 - Only identify matching skills supported by resume evidence.
