@@ -5,71 +5,13 @@ import type { AnalysisDTO } from "@/lib/dto";
 import { friendlyError, type ApiErrorBody } from "@/lib/api-errors";
 import { MAX_JD_CHARS, MAX_RESUME_CHARS } from "@/lib/ai/limits";
 import AnalysisReport from "./AnalysisReport";
+import FileButton from "./FileButton";
 
 const JD_MAX = MAX_JD_CHARS;
 const RESUME_MAX = MAX_RESUME_CHARS;
 
 const inputClass =
   "w-full rounded-md border border-neutral-300 bg-transparent p-2 text-sm dark:border-neutral-700";
-
-function FileButton({
-  onText,
-  onError,
-}: {
-  onText: (text: string) => void;
-  onError: (message: string | null) => void;
-}) {
-  const [reading, setReading] = useState(false);
-
-  async function handleFile(file: File) {
-    onError(null);
-
-    const isPdf =
-      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-
-    if (!isPdf) {
-      onText(await file.text());
-      return;
-    }
-
-    // PDFs are parsed on the server; the text then lands in the textarea.
-    setReading(true);
-    try {
-      const body = new FormData();
-      body.append("file", file);
-      const res = await fetch("/api/extract-text", { method: "POST", body });
-      const data = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        onError(data?.message ?? "Could not read this PDF. Please paste the text instead.");
-        return;
-      }
-      onText(data.text as string);
-    } catch {
-      onError(friendlyError(0, null));
-    } finally {
-      setReading(false);
-    }
-  }
-
-  return (
-    <span className="flex items-center gap-2">
-      {reading && <span className="text-xs text-neutral-500">Reading PDF…</span>}
-      <input
-        type="file"
-        accept=".txt,.pdf,text/plain,application/pdf"
-        className="text-xs"
-        disabled={reading}
-        onChange={async (e) => {
-          const input = e.target;
-          const file = input.files?.[0];
-          if (file) await handleFile(file);
-          input.value = "";
-        }}
-      />
-    </span>
-  );
-}
 
 export default function AnalyzeForm() {
   const [candidateName, setCandidateName] = useState("");
@@ -79,6 +21,15 @@ export default function AnalyzeForm() {
   const [error, setError] = useState<string | null>(null);
   const [truncated, setTruncated] = useState(false);
   const [result, setResult] = useState<AnalysisDTO | null>(null);
+
+  function onReset() {
+    setCandidateName("");
+    setJobDescription("");
+    setResumeText("");
+    setResult(null);
+    setError(null);
+    setTruncated(false);
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -185,7 +136,18 @@ export default function AnalyzeForm() {
           Input was shortened to fit the AI model&apos;s limits; the analysis covers the beginning of the text.
         </p>
       )}
-      {result && <AnalysisReport analysis={result} />}
+      {result && (
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={onReset}
+            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium dark:border-neutral-700"
+          >
+            Reset
+          </button>
+          <AnalysisReport analysis={result} />
+        </div>
+      )}
     </div>
   );
 }
