@@ -27,8 +27,8 @@ It is paired with Groq's strict JSON-schema response format and Zod validation. 
 **1. `export const runtime = "nodejs"` broke the route**
 The generated route handler exported a `runtime` segment config. This project enables `cacheComponents` in `next.config.ts`, and that combination is rejected at compile time (`Route segment config "runtime" is not compatible with nextConfig.cacheComponents`), so the endpoint returned an HTML 500 instead of JSON. Fix: remove the line. Route handlers already run on Node.js by default, which is what Mongoose and the Groq SDK need. Lesson: the project's `AGENTS.md` says this Next.js version differs from what models were trained on, so I checked `node_modules/next/dist/docs` instead of trusting the generated pattern.
 
-**2. The analysis route was nested under `/api/health/`**
-The analysis handler had been generated at `app/api/health/analyses/route.ts`, so the URL was `/api/health/analyses`. Calling the obvious `/api/analyses` returned a 404 HTML page (not my handler's JSON, which is how I could tell the request never reached it). It is a health-check folder, not a resource path. Fix: move it to `app/api/analyses/route.ts` and commit the move on its own, so the history shows it. The same move later let `GET` and `DELETE /api/analyses/:id` share a clean REST layout.
+**2. The system prompt gave misleading "top matching skills"**
+The prompt said "Return exactly 5 matching skills" with no rule about relevance. When I tested a full-stack resume against a business development job description, it still listed my strongest technical skills as the top matches. The strict schema forces five entries, so the model filled the slots with whatever was most prominent on the resume. Fix: I rewrote the rules so a match must be something the job description asks for AND the resume shows, ordered strongest to weakest, with weak slots starting "Weak or no match:", and a low score when the field is different. Result: [real scores before and after]..
 
 ## Other corrections worth noting
 
